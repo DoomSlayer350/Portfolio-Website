@@ -1,0 +1,64 @@
+canvas{
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+main{
+  position: absolute;
+  width: 100%;
+}
+
+.centred-element{
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.middle-button{
+  position: fixed;
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+
+.rowed-elements{
+  display: grid;
+  grid-auto-flow: row;
+  row-gap: 20px;
+}
+
+.main-header{
+  text-align: center;
+}
+
+h3{
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.highlight-image{
+  width: 48%;
+  height: 48%;
+}
+
+.cluster-image{
+  width: 35%;
+  height: 35%;
+}
+
+.window-image{
+  width: 93%;
+}
+
+.text-block{
+  width: 50%;
+}
+
+.image-block{
+  display: block;
+}
+
+.text-desc-half{
+  width: 50%;
+}
