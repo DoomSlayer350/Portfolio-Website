@@ -4,6 +4,12 @@ import { OrbitControls } from 'three/examples/jsm/Addons.js';
 import { element, texture } from 'three/tsl';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { UVsDebug } from 'three/addons/utils/UVsDebug.js';
+import {
+  camera,
+  RotateCameraThroughMouseMovement
+} from "./camera.js";
+import { renderer } from "./renderer.js";
+
 
 /* Scene */
 
@@ -11,53 +17,7 @@ const scene = new THREE.Scene();
 
 /* Camera */
 
-const camera = new THREE.PerspectiveCamera(90, window.innerWidth/window.innerHeight, 0.1, 1000); //(FOV, Aspect ratio, view_frustrum_near, view_frustrum_far) are the parameters
 camera.position.setZ(30);
-
-const MousePositionNormalised = {
-  x: 0,
-  y: 0,
-  z: 0
-};
-
-const CameraRotationOffset = {
-  x: 0,
-  y: 0,
-  z: 0
-};
-
-document.addEventListener("mousemove", (event) => {
-  //console.log(event.clientX, event.clientY);
-  const ScreenHeight = window.innerHeight;
-  const ScreenWidth = window.innerWidth;
-
-  const MousePositionTranslated = {
-    x: event.clientX - (ScreenWidth / 2),
-    y: event.clientY - (ScreenHeight / 2)
-  };
-
-  MousePositionNormalised.x = (MousePositionTranslated.x) / (ScreenWidth / 2);
-  MousePositionNormalised.y = (MousePositionTranslated.y) / (ScreenHeight / 2);
-  //console.log(MousePositionNormalised.x, MousePositionNormalised.y);
-});
-
-function RotateCameraThroughMouseMovement(){
-  const RotationMultiplier = 0.1;
-  CameraRotationOffset.x = MousePositionNormalised.y * RotationMultiplier;
-  CameraRotationOffset.y = MousePositionNormalised.x * RotationMultiplier;
-  camera.rotation.x = (CameraRotationOffset.x) * -1;
-  camera.rotation.y = (CameraRotationOffset.y) * -1;
-};
-
-/* Renderer */
-
-const renderer = new THREE.WebGLRenderer({
-  canvas: document.querySelector('#bg'),
-  antialias: true,
-});
-renderer.outputColorSpace = THREE.SRGBColorSpace;
-renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setSize(window.innerWidth, window.innerHeight);
 
 /* Loader */
 
@@ -68,7 +28,6 @@ const loader = new GLTFLoader();
 const MainMenuConsoleGLTF = await loader.loadAsync("src/assets/meshes/MainMenuConsoleMesh.glb");
 const MainMenuConsole = MainMenuConsoleGLTF.scene.children[0];
 const NumberOfChildren = MainMenuConsoleGLTF.scene.children.length;
-console.log(NumberOfChildren);
 scene.add(MainMenuConsole);
 MainMenuConsole.position.set(0,0,25);
 
@@ -93,7 +52,7 @@ scene.add(bg_plane);
 
 function animate() {
   requestAnimationFrame(animate);
-  RotateCameraThroughMouseMovement();
+  RotateCameraThroughMouseMovement(0.1);
   renderer.render(scene, camera);
 };
 
