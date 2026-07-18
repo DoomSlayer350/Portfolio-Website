@@ -34,39 +34,49 @@ MainMenuConsole.position.set(0,0,25);
 
 /* Lights */
 
-const ambientLight = new THREE.AmbientLight(0xffffff,0.5);
-ambientLight.position.set(0,0,0);
-const pointLight = new THREE.PointLight(0xffffff, 1, 0, 0.1);
-const pointlightHelper = new THREE.PointLightHelper(pointLight);
-pointLight.position.set(-20,-13,40);
-pointLight.castShadow = true;
-scene.add(ambientLight, pointLight, pointlightHelper);
+function CreatePointLight(Location_x, Location_y, Location_z, Colour, Intensity, Decay, Distance, ShouldDebug){
+  const pointLight = new THREE.PointLight(Colour, Intensity, 0, Decay);
+  pointLight.castShadow = true;
+  pointLight.position.set(Location_x, Location_y, Location_z)
+  if (ShouldDebug){
+    const pointlightHelper = new THREE.PointLightHelper(pointLight);
+    scene.add(pointlightHelper);
+  };
+  scene.add(pointLight);
+};
 
-const spotLight1 = new THREE.SpotLight(0xffffff, 0.3, 0, Math.PI/2.5, 1, 0);
-spotLight1.position.set(-80,40,100);
-spotLight1.rotateX(70);
-spotLight1.rotateY(70);
-const spotlightHelper1 = new THREE.SpotLightHelper(spotLight1);
-scene.add(spotLight1,spotlightHelper1);
-const spotLight2 = new THREE.SpotLight(0xffffff, 0.3, 0, Math.PI/2.5, 1, 0.1);
-spotLight2.position.set(-6,4,35);
-spotLight2.rotateX(20);
-spotLight2.rotateY(40);
-const spotlightHelper2 = new THREE.SpotLightHelper(spotLight2);
-scene.add(spotLight2, spotlightHelper2)
-const spotLight3 = new THREE.SpotLight(0xffffff, 0.3, 0, Math.PI/2.5, 1, 0.1);
-spotLight3.position.set(15,-2,35);
-spotLight3.rotateX(0);
-spotLight3.rotateY(-15);
-const spotlightHelper3 = new THREE.SpotLightHelper(spotLight3);
-scene.add(spotLight3, spotlightHelper3);
-const spotLight4 = new THREE.SpotLight(0xffffff, 0.3, 0, Math.PI/4, 1, 0.1);
-spotLight4.position.set(0,-9,35);
-spotLight4.rotation.x = 1;
-const spotlightHelper4 = new THREE.SpotLightHelper(spotLight4);
-scene.add(spotLight4, spotlightHelper4);
-const hemisphereLight = new THREE.HemisphereLight(0x00000, 0xfffff, 0.1);
-scene.add(hemisphereLight);
+const ambientLight = new THREE.AmbientLight( 0x64648b,0.1);
+ambientLight.position.set(0,0,0);
+
+const spotLight = new THREE.SpotLight(0xffffff, 0.15, 0, Math.PI/2.5, 0.7, 0);
+spotLight.position.set(-40,-30,70);
+const target = new THREE.Object3D();
+target.position.set(40,10,0);
+spotLight.target = target;
+spotLight.castShadow = true;
+const spotlightHelper = new THREE.SpotLightHelper(spotLight);
+//scene.add(spotLight,spotlightHelper);
+
+const hemisphereLight = new THREE.HemisphereLight(0xFEFFBD, 0xFF6200, 0.3);
+scene.add(hemisphereLight, ambientLight);
+
+CreatePointLight(0, 0.5, 25.5 , 0xFF8400, 30, 3, 10, false);
+CreatePointLight(-3, 0.5, 26 , 0xFF8400, 30, 3, 10, false);
+CreatePointLight(3, 0.5, 26 , 0xFF8400, 30, 3, 10, false);
+CreatePointLight(1.5, 0.5, 26 , 0xFF8400, 30, 3, 10, false);
+CreatePointLight(-1.5, 0.5, 26 , 0xFF8400, 30, 3, 10, false);
+
+CreatePointLight(-7.25, 3.8, 27 , 0xFF8400, 1, 0.5, 1, false);
+CreatePointLight(7.25, 3.8, 27 , 0xFF8400, 1, 0.5, 1, false);
+CreatePointLight(-9, 5, 27 , 0xFF8400, 1, 0.5, 1, false);
+CreatePointLight(9, 5, 27 , 0xFF8400, 1, 0.5, 1, false);
+
+CreatePointLight(0, 0, 20 , 0xFF8400, 100, 1, 1, false); //lights up the back
+
+CreatePointLight(0, -2.8, 26 , 0xFF8400, 0.3, 0.5, 1, false);
+CreatePointLight(2.3, -2.8, 25.5 , 0xFF8400, 0.3, 0.5, 1, false);
+CreatePointLight(-2.3, -2.8, 25.5 , 0xFF8400, 0.3, 0.5, 1, false);
+
 
 /* Helpers */
 
@@ -74,8 +84,8 @@ const gridHelper = new THREE.GridHelper(1000,100);
 
 /* Background Plane */
 
-const bg_plane_geo = new THREE.PlaneGeometry(1000,1000);
-const bg_plane_mat = new THREE.MeshStandardMaterial({color: 0x36454F});
+const bg_plane_geo = new THREE.PlaneGeometry(10000,10000);
+const bg_plane_mat = new THREE.MeshStandardMaterial({color: 0x120e0e});
 const bg_plane = new THREE.Mesh(bg_plane_geo, bg_plane_mat);
 scene.add(bg_plane);
 
@@ -83,7 +93,7 @@ scene.add(bg_plane);
 
 function animate() {
   requestAnimationFrame(animate);
-  RotateCameraThroughMouseMovement(0.5); //0.1 is default
+  RotateCameraThroughMouseMovement(0.1); //0.1 is default
   renderer.render(scene, camera);
 };
 
