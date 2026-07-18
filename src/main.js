@@ -5,39 +5,14 @@ import { element, texture } from 'three/tsl';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { UVsDebug } from 'three/addons/utils/UVsDebug.js';
 
+/* Scene */
 
 const scene = new THREE.Scene();
+
+/* Camera */
+
 const camera = new THREE.PerspectiveCamera(90, window.innerWidth/window.innerHeight, 0.1, 1000); //(FOV, Aspect ratio, view_frustrum_near, view_frustrum_far) are the parameters
-const renderer = new THREE.WebGLRenderer({
-  canvas: document.querySelector('#bg'),
-  antialias: true,
-});
-renderer.outputColorSpace = THREE.SRGBColorSpace;
-const loader = new GLTFLoader();
-const MapLoader = new THREE.TextureLoader();
-const MainMenuConsoleGLTF = await loader.loadAsync("src/assets/meshes/MainMenuConsoleMesh.glb");
-const MainMenuConsole = MainMenuConsoleGLTF.scene.children[0];
-const NumberOfChildren = MainMenuConsoleGLTF.scene.children.length;
-console.log(NumberOfChildren);
-scene.add(MainMenuConsole);
-MainMenuConsole.position.set(0,0,25);
-
-renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setSize(window.innerWidth, window.innerHeight);
-
-
-const ambientLight = new THREE.AmbientLight(0xffffff);
-ambientLight.position.set(0,0,0);
-const gridHelper = new THREE.GridHelper(1000,100);
-
 camera.position.setZ(30);
-
-scene.add(ambientLight);
-
-const bg_plane_geo = new THREE.PlaneGeometry(1000,1000);
-const bg_plane_mat = new THREE.MeshBasicMaterial({color: 0x36454F});
-const bg_plane = new THREE.Mesh(bg_plane_geo, bg_plane_mat);
-scene.add(bg_plane);
 
 const MousePositionNormalised = {
   x: 0,
@@ -73,6 +48,48 @@ function RotateCameraThroughMouseMovement(){
   camera.rotation.x = (CameraRotationOffset.x) * -1;
   camera.rotation.y = (CameraRotationOffset.y) * -1;
 };
+
+/* Renderer */
+
+const renderer = new THREE.WebGLRenderer({
+  canvas: document.querySelector('#bg'),
+  antialias: true,
+});
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.setPixelRatio(window.devicePixelRatio);
+renderer.setSize(window.innerWidth, window.innerHeight);
+
+/* Loader */
+
+const loader = new GLTFLoader();
+
+/* Main Menu Console */
+
+const MainMenuConsoleGLTF = await loader.loadAsync("src/assets/meshes/MainMenuConsoleMesh.glb");
+const MainMenuConsole = MainMenuConsoleGLTF.scene.children[0];
+const NumberOfChildren = MainMenuConsoleGLTF.scene.children.length;
+console.log(NumberOfChildren);
+scene.add(MainMenuConsole);
+MainMenuConsole.position.set(0,0,25);
+
+/* Lights */
+
+const ambientLight = new THREE.AmbientLight(0xffffff);
+ambientLight.position.set(0,0,0);
+scene.add(ambientLight);
+
+/* Helpers */
+
+const gridHelper = new THREE.GridHelper(1000,100);
+
+/* Background Plane */
+
+const bg_plane_geo = new THREE.PlaneGeometry(1000,1000);
+const bg_plane_mat = new THREE.MeshBasicMaterial({color: 0x36454F});
+const bg_plane = new THREE.Mesh(bg_plane_geo, bg_plane_mat);
+scene.add(bg_plane);
+
+/* Animate */
 
 function animate() {
   requestAnimationFrame(animate);
