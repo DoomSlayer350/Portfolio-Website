@@ -1,8 +1,7 @@
 import './style.css'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
-import { element, texture } from 'three/tsl';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { color, element, texture } from 'three/tsl';
 import { UVsDebug } from 'three/addons/utils/UVsDebug.js';
 import {
   camera,
@@ -12,22 +11,41 @@ import { renderer } from "./renderer.js";
 import { SpotLightHelper } from 'three/webgpu';
 import { scene } from "./scene.js";
 import { composer } from "./composer.js";
+import { LoadGLTFMesh } from './utils/gltf-importer.js';
 
 /* Camera */
 
 camera.position.setZ(29.5);
 
-/* Loader */
-
-const loader = new GLTFLoader();
-
 /* Main Menu Console */
 
-const MainMenuConsoleGLTF = await loader.loadAsync("src/assets/meshes/MainMenuConsoleMesh.glb");
-const MainMenuConsole = MainMenuConsoleGLTF.scene.children[0];
-const NumberOfChildren = MainMenuConsoleGLTF.scene.children.length;
+const MainMenuConsole = await LoadGLTFMesh("src/assets/meshes/MainMenuConsoleMesh.glb");
 scene.add(MainMenuConsole);
 MainMenuConsole.position.set(0,0,25);
+
+/* Start Button */
+
+const StartButtonFrameBottom = await LoadGLTFMesh("src/assets/meshes/ButtonFrameMesh.glb");
+const StartButtonFrameTop = await LoadGLTFMesh("src/assets/meshes/ButtonFrameMesh.glb");
+StartButtonFrameBottom.position.set(0,0,27);
+StartButtonFrameTop.position.set(0,0.55,27);
+scene.add(StartButtonFrameBottom, StartButtonFrameTop);
+
+const StartButtonMaterial = new THREE.MeshBasicMaterial({color: 0x00000});
+StartButtonFrameBottom.material = StartButtonMaterial;
+
+const EnterText = await LoadGLTFMesh("src/assets/meshes/StartButtonTextMesh.glb");
+EnterText.position.set(0,0.25,26.8);
+EnterText.material = StartButtonMaterial;
+scene.add(EnterText);
+
+const HTMLStartButton = document.getElementById("StartButton");
+
+function HTMLStartButtonEnter() {
+  console.log("entered");
+};
+
+HTMLStartButton.addEventListener("mouseenter", HTMLStartButtonEnter);
 
 /* Lights */
 
@@ -74,6 +92,16 @@ CreatePointLight(0, 0, 20 , 0xFF8400, 0.2, 1, 1, false); //lights up the back
 CreatePointLight(0, -2.8, 26 , 0xFF8400, 0.1, 0.5, 1, false);
 CreatePointLight(2.5, -2.8, 25.8 , 0xFF8400, 0.7, 0.6, 2.5, false);
 CreatePointLight(-2.5, -2.8, 25.8 , 0xFF8400, 0.7, 0.6, 2.5, false);
+
+/* To light up the metal at the bottom.*/
+
+CreatePointLight(-4.4, -3.3, 26.1 , 0xffffff63, 0.01, 5, 0.5, false);
+CreatePointLight(4.4, -3.3, 26.1 , 0xffffff63, 0.01, 5, 0.5, false);
+CreatePointLight(-6, -2, 25.8 , 0xffffff63, 0.1, 1, 0.5, false);
+CreatePointLight(6, -2, 25.8 , 0xffffff63, 0.1, 1, 0.5, false);
+CreatePointLight(-0, -3.7, 25.4 , 0xffffff63, 0.3, 1, 2, false);
+CreatePointLight(-2.6, -3.6, 25.5 , 0xffffff63, 0.1, 0.5, 2, false);
+CreatePointLight(2.6, -3.6, 25.5 , 0xffffff63, 0.1, 0.5, 2, false);
 
 
 /* Helpers */
