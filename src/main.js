@@ -1,51 +1,71 @@
 import './style.css'
 import * as THREE from 'three';
+import { gsap } from "gsap";
+
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
-import { color, element, texture } from 'three/tsl';
+import { color, element, texture, time } from 'three/tsl';
 import { UVsDebug } from 'three/addons/utils/UVsDebug.js';
-import {
-  camera,
-  RotateCameraThroughMouseMovement
-} from "./camera.js";
+import { camera, RotateCameraThroughMouseMovement } from "./camera.js";
 import { renderer } from "./renderer.js";
 import { SpotLightHelper } from 'three/webgpu';
 import { scene } from "./scene.js";
 import { composer } from "./composer.js";
 import { LoadGLTFMesh } from './utils/gltf-importer.js';
+import { WorldObject } from './objects/object.js';
+import { timeline } from "./timeline.js";
 
 /* Camera */
 
-camera.position.setZ(29.5);
+camera.position.set(0,0,29.5);
+//gsap.to(camera.position, {z:29.5, ease:"sine.out", duration:1});
 
 /* Main Menu Console */
 
-const MainMenuConsole = await LoadGLTFMesh("src/assets/meshes/MainMenuConsoleMesh.glb");
-scene.add(MainMenuConsole);
-MainMenuConsole.position.set(0,0,25);
+const MainMenuConsole = new WorldObject(await LoadGLTFMesh("src/assets/meshes/MainMenuConsoleMesh.glb"))
+scene.add(MainMenuConsole.mesh);
+MainMenuConsole.mesh.position.set(0,0,25);
 
 /* Start Button */
 
-const StartButtonFrameBottom = await LoadGLTFMesh("src/assets/meshes/ButtonFrameMesh.glb");
-const StartButtonFrameTop = await LoadGLTFMesh("src/assets/meshes/ButtonFrameMesh.glb");
-StartButtonFrameBottom.position.set(0,0,27);
-StartButtonFrameTop.position.set(0,0.55,27);
-scene.add(StartButtonFrameBottom, StartButtonFrameTop);
+const StartButtonFrameBottom = new WorldObject(await LoadGLTFMesh("src/assets/meshes/ButtonFrameMesh.glb"), timeline);
+const StartButtonFrameTop = new WorldObject(await LoadGLTFMesh("src/assets/meshes/ButtonFrameMesh.glb"), timeline);
+StartButtonFrameBottom.mesh.position.set(0,0,27);
+StartButtonFrameTop.mesh.position.set(0,0.55,27);
+scene.add(StartButtonFrameBottom.mesh, StartButtonFrameTop.mesh);
 
 const StartButtonMaterial = new THREE.MeshBasicMaterial({color: 0x00000});
-StartButtonFrameBottom.material = StartButtonMaterial;
+StartButtonFrameBottom.mesh.material = StartButtonMaterial;
 
-const EnterText = await LoadGLTFMesh("src/assets/meshes/StartButtonTextMesh.glb");
-EnterText.position.set(0,0.25,26.8);
-EnterText.material = StartButtonMaterial;
-scene.add(EnterText);
+const EnterText = new WorldObject(await LoadGLTFMesh("src/assets/meshes/StartButtonTextMesh.glb"));
+EnterText.mesh.position.set(0,0.25,26.8);
+EnterText.mesh.material = StartButtonMaterial;
+scene.add(EnterText.mesh);
 
 const HTMLStartButton = document.getElementById("StartButton");
 
 function HTMLStartButtonEnter() {
   console.log("entered");
+  this.style.cursor = "pointer";
+  timeline.clear();
+  StartButtonFrameTop.InterpolateToPoint({x: 0, y:0.65, z: 27}, 0.5, "sine.out");
+  StartButtonFrameBottom.InterpolateToPoint({ x: 0, y: -0.1, z: 27}, 0.5, "sine.out", "<");
+};
+
+function HTMLStartButtonLeave() {
+  console.log("exited");
+  timeline.clear();
+  StartButtonFrameTop.InterpolateToPoint({x: 0, y:0.55, z: 27}, 0.5, "sine.out");
+  StartButtonFrameBottom.InterpolateToPoint({ x: 0, y: 0, z: 27}, 0.5, "sine.out", "<");
+};
+
+function HTMLStartButtonClick() {
+  console.log("clicked");
+  window.location.href = "src/main-page.html"
 };
 
 HTMLStartButton.addEventListener("mouseenter", HTMLStartButtonEnter);
+HTMLStartButton.addEventListener("mouseleave", HTMLStartButtonLeave);
+HTMLStartButton.addEventListener("click", HTMLStartButtonClick);
 
 /* Lights */
 

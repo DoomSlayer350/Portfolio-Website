@@ -15,6 +15,9 @@ main{
   position: fixed;
   left: 50%;
   top: 50%;
+  background: transparent;
+  font-size: 0;
+  border: none !important;
   transform: translate(-50%, -100%);
 }
 
