@@ -18,4 +18,15 @@ export class WorldObject extends THREE.Object3D{
         };
         this.timeline.to(this.mesh.position, {x:Point.x, y:Point.y, z:Point.z, ease:EaseMethod, duration:Duration}, PositionInTimeline);
     };
+    InterpolateToScale(newScale, Duration, EaseMethod, PositionInTimeline=null){
+        /*if (gsap.isTweening(this.mesh.position)){
+            return true;
+        };
+        */
+        if (PositionInTimeline == null){
+            this.timeline.to(this.mesh.scale, {x: newScale.x, y: newScale.y, z: newScale.z, ease:EaseMethod, duration:Duration});
+            return;
+        };
+        this.timeline.to(this.mesh.scale, {x: newScale.x, y: newScale.y, z: newScale.z, ease:EaseMethod, duration:Duration}, PositionInTimeline);
+    };
 };

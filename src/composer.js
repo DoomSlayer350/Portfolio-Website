@@ -16,3 +16,14 @@ composer.addPass(outputPass);
 const resolution = new THREE.Vector2(window.innerWidth, window.innerHeight);
 const bloomPass = new UnrealBloomPass(resolution, 0.2, 0.1, 0);
 composer.addPass(bloomPass);
+
+export function cycleBloom(timeline){
+    timeline.to(bloomPass, {strength: 0.28, radius:0.5, duration: 0.5, ease: "sine.out"}, "<");
+    timeline.to(bloomPass, {threshold: 1, duration: 1, ease: "sine.out"}, "<");
+};
+
+export function stopCyclingBloom(timeline){
+    timeline.clear();
+    timeline.to(bloomPass, {strength: 0.2, radius:0.1, threshold: 0, duration: 0.5, ease: "sine.out"}, "<");
+    timeline.to(bloomPass, {threshold: 0, duration: 1, ease: "sine.out"}, "<");
+};

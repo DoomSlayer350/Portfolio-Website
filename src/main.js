@@ -9,7 +9,7 @@ import { camera, RotateCameraThroughMouseMovement } from "./camera.js";
 import { renderer } from "./renderer.js";
 import { SpotLightHelper } from 'three/webgpu';
 import { scene } from "./scene.js";
-import { composer } from "./composer.js";
+import { composer, cycleBloom, stopCyclingBloom } from "./composer.js";
 import { LoadGLTFMesh } from './utils/gltf-importer.js';
 import { WorldObject } from './objects/object.js';
 import { timeline } from "./timeline.js";
@@ -36,7 +36,7 @@ scene.add(StartButtonFrameBottom.mesh, StartButtonFrameTop.mesh);
 const StartButtonMaterial = new THREE.MeshBasicMaterial({color: 0x00000});
 StartButtonFrameBottom.mesh.material = StartButtonMaterial;
 
-const EnterText = new WorldObject(await LoadGLTFMesh("src/assets/meshes/StartButtonTextMesh.glb"));
+const EnterText = new WorldObject(await LoadGLTFMesh("src/assets/meshes/StartButtonTextMesh.glb"), timeline);
 EnterText.mesh.position.set(0,0.25,26.8);
 EnterText.mesh.material = StartButtonMaterial;
 scene.add(EnterText.mesh);
@@ -47,15 +47,19 @@ function HTMLStartButtonEnter() {
   console.log("entered");
   this.style.cursor = "pointer";
   timeline.clear();
-  StartButtonFrameTop.InterpolateToPoint({x: 0, y:0.65, z: 27}, 0.5, "sine.out");
-  StartButtonFrameBottom.InterpolateToPoint({ x: 0, y: -0.1, z: 27}, 0.5, "sine.out", "<");
+  cycleBloom(timeline);
+  StartButtonFrameTop.InterpolateToPoint({x: 0, y:0.55, z: 27.2}, 0.5, "sine.out", "<");
+  StartButtonFrameBottom.InterpolateToPoint({ x: 0, y: 0, z: 27.2}, 0.5, "sine.out", "<");
+  EnterText.InterpolateToPoint({x: 0, y: 0.23, z: 27.2}, 0.5, "sine.out", "<");
 };
 
 function HTMLStartButtonLeave() {
   console.log("exited");
   timeline.clear();
-  StartButtonFrameTop.InterpolateToPoint({x: 0, y:0.55, z: 27}, 0.5, "sine.out");
+  stopCyclingBloom(timeline);
+  StartButtonFrameTop.InterpolateToPoint({x: 0, y:0.55, z: 27}, 0.5, "sine.out", "<");
   StartButtonFrameBottom.InterpolateToPoint({ x: 0, y: 0, z: 27}, 0.5, "sine.out", "<");
+  EnterText.InterpolateToPoint({x: 0, y: 0.25, z: 26.8}, 0.5, "sine.out", "<");
 };
 
 function HTMLStartButtonClick() {
