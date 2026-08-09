@@ -48,9 +48,9 @@ function HTMLStartButtonEnter() {
   this.style.cursor = "pointer";
   timeline.clear();
   cycleBloom(timeline);
-  StartButtonFrameTop.InterpolateToPoint({x: 0, y:0.55, z: 27.2}, 0.5, "sine.out", "<");
-  StartButtonFrameBottom.InterpolateToPoint({ x: 0, y: 0, z: 27.2}, 0.5, "sine.out", "<");
-  EnterText.InterpolateToPoint({x: 0, y: 0.23, z: 27.2}, 0.5, "sine.out", "<");
+  StartButtonFrameTop.InterpolateToPoint({x: 0, y:0.65, z: 27}, 0.5, "sine.out", "<");
+  StartButtonFrameBottom.InterpolateToPoint({ x: 0, y: -0.10, z: 27}, 0.5, "sine.out", "<");
+  EnterText.InterpolateToPoint({x: 0, y: 0.23, z: 27}, 0.5, "sine.out", "<");
 };
 
 function HTMLStartButtonLeave() {

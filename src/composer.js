@@ -18,7 +18,7 @@ const bloomPass = new UnrealBloomPass(resolution, 0.2, 0.1, 0);
 composer.addPass(bloomPass);
 
 export function cycleBloom(timeline){
-    timeline.to(bloomPass, {strength: 0.28, radius:0.5, duration: 0.5, ease: "sine.out"}, "<");
+    timeline.to(bloomPass, {strength: 0.15, radius:0.01, duration: 0.5, ease: "sine.out"}, "<");
     timeline.to(bloomPass, {threshold: 1, duration: 1, ease: "sine.out"}, "<");
 };
 
