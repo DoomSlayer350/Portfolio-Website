@@ -19,6 +19,15 @@ import { timeline } from "./timeline.js";
 camera.position.set(0,0,29.5);
 //gsap.to(camera.position, {z:29.5, ease:"sine.out", duration:1});
 
+/* Sounds */
+
+const EnterButtonSound = new Audio("src/assets/audio/SelectButton.mp3");
+const ExitButtonSound = new Audio("src/assets/audio/BackOffButton.mp3");
+const MainMenuAmbienceSound = new Audio("src/assets/audio/MainMenuAmbience.mp3");
+
+MainMenuAmbienceSound.loop = true;
+MainMenuAmbienceSound.play();
+
 /* Main Menu Console */
 
 const MainMenuConsole = new WorldObject(await LoadGLTFMesh("src/assets/meshes/MainMenuConsoleMesh.glb"))
@@ -44,6 +53,11 @@ scene.add(EnterText.mesh);
 const HTMLStartButton = document.getElementById("StartButton");
 
 function HTMLStartButtonEnter() {
+
+  if (MainMenuAmbienceSound.paused && MainMenuAmbienceSound.ended){
+    MainMenuAmbienceSound.play();
+  };
+
   console.log("entered");
   this.style.cursor = "pointer";
   timeline.clear();
@@ -51,6 +65,8 @@ function HTMLStartButtonEnter() {
   StartButtonFrameTop.InterpolateToPoint({x: 0, y:0.65, z: 27}, 0.5, "sine.out", "<");
   StartButtonFrameBottom.InterpolateToPoint({ x: 0, y: -0.10, z: 27}, 0.5, "sine.out", "<");
   EnterText.InterpolateToPoint({x: 0, y: 0.23, z: 27}, 0.5, "sine.out", "<");
+  EnterButtonSound.play();
+  timeline.to(MainMenuAmbienceSound, {volume: 0.35, ease: "sine.out", duration: 0.5}, "<");
 };
 
 function HTMLStartButtonLeave() {
@@ -60,6 +76,8 @@ function HTMLStartButtonLeave() {
   StartButtonFrameTop.InterpolateToPoint({x: 0, y:0.55, z: 27}, 0.5, "sine.out", "<");
   StartButtonFrameBottom.InterpolateToPoint({ x: 0, y: 0, z: 27}, 0.5, "sine.out", "<");
   EnterText.InterpolateToPoint({x: 0, y: 0.25, z: 26.8}, 0.5, "sine.out", "<");
+  ExitButtonSound.play();
+  timeline.to(MainMenuAmbienceSound, {volume: 1, ease: "sine.out", duration: 0.5}, "<");
 };
 
 function HTMLStartButtonClick() {
